@@ -1,0 +1,286 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                     String            @id @default(cuid())
+  email                  String            @unique
+  username               String            @unique
+  displayName            String
+  avatar                 String?
+  phoneNumber            String?           
+  bio                    String?
+  status                 UserStatus        @default(OFFLINE)
+  isOnline               Boolean           @default(false)
+  lastSeenAt             DateTime?
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+  password               String
+  blockedByUsers         BlockedUser[]     @relation("Blocked")
+  blockedUsers           BlockedUser[]     @relation("Blocker")
+  callParticipants       CallParticipant[]
+  friendRequestsReceived FriendRequest[]   @relation("Receiver")
+  friendRequestsSent     FriendRequest[]   @relation("Sender")
+  friendsOf              Friendship[]      @relation("FriendOf")
+  friendships            Friendship[]      @relation("Friendships")
+  reactions              MessageReaction[]
+  sentMessages           Message[]
+  notifications          Notification[]
+  roomMemberships        RoomMember[]
+  createdRooms           Room[]            @relation("RoomCreator")
+
+  @@index([phoneNumber])
+  @@map("users")
+}
+
+model FriendRequest {
+  id         String              @id @default(cuid())
+  senderId   String
+  receiverId String
+  status     FriendRequestStatus @default(PENDING)
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  receiver   User                @relation("Receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  sender     User                @relation("Sender", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@unique([senderId, receiverId])
+  @@map("friend_requests")
+}
+
+model Friendship {
+  id        String   @id @default(cuid())
+  userId    String
+  friendId  String
+  createdAt DateTime @default(now())
+  friend    User     @relation("FriendOf", fields: [friendId], references: [id], onDelete: Cascade)
+  user      User     @relation("Friendships", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, friendId])
+  @@map("friendships")
+}
+
+model BlockedUser {
+  id        String   @id @default(cuid())
+  blockerId String
+  blockedId String
+  createdAt DateTime @default(now())
+  blocked   User     @relation("Blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+  blocker   User     @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, blockedId])
+  @@map("blocked_users")
+}
+
+model Room {
+  id          String       @id @default(cuid())
+  name        String?
+  description String?
+  avatar      String?
+  type        RoomType     @default(GROUP)
+  isActive    Boolean      @default(true)
+  createdById String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  calls       Call[]
+  messages    Message[]
+  members     RoomMember[]
+  createdBy   User         @relation("RoomCreator", fields: [createdById], references: [id])
+
+  @@index([createdById])
+  @@map("rooms")
+}
+
+model RoomMember {
+  id                String    @id @default(cuid())
+  roomId            String
+  userId            String
+  role              RoomRole  @default(MEMBER)
+  joinedAt          DateTime  @default(now())
+  leftAt            DateTime?
+  isActive          Boolean   @default(true)
+  lastReadMessageId String?
+  lastReadAt        DateTime?
+  lastReadMessage   Message?  @relation("LastReadMessage", fields: [lastReadMessageId], references: [id])
+  room              Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([roomId, userId])
+  @@index([roomId])
+  @@index([userId])
+  @@map("room_members")
+}
+
+model Message {
+  id          String              @id @default(cuid())
+  content     String?
+  type        MessageType         @default(TEXT)
+  roomId      String
+  senderId    String
+  replyToId   String?
+  isEdited    Boolean             @default(false)
+  isDeleted   Boolean             @default(false)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  attachments MessageAttachment[]
+  reactions   MessageReaction[]
+  replyTo     Message?            @relation("MessageReply", fields: [replyToId], references: [id])
+  replies     Message[]           @relation("MessageReply")
+  room        Room                @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  sender      User                @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  RoomMember  RoomMember[]        @relation("LastReadMessage")
+
+  @@index([roomId, createdAt])
+  @@index([senderId])
+  @@map("messages")
+}
+
+model MessageAttachment {
+  id        String         @id @default(cuid())
+  messageId String
+  fileName  String
+  fileUrl   String
+  fileSize  Int
+  mimeType  String
+  type      AttachmentType
+  thumbnail String?
+  duration  Int?
+  width     Int?
+  height    Int?
+  createdAt DateTime       @default(now())
+  message   Message        @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@map("message_attachments")
+}
+
+model MessageReaction {
+  id        String   @id @default(cuid())
+  messageId String
+  userId    String
+  emoji     String
+  createdAt DateTime @default(now())
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId, emoji])
+  @@map("message_reactions")
+}
+
+model Call {
+  id           String            @id @default(cuid())
+  roomId       String
+  type         CallType          @default(VOICE)
+  status       CallStatus        @default(ONGOING)
+  startedAt    DateTime          @default(now())
+  endedAt      DateTime?
+  duration     Int?
+  participants CallParticipant[]
+  room         Room              @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@map("calls")
+}
+
+model CallParticipant {
+  id       String                @id @default(cuid())
+  callId   String
+  userId   String
+  status   CallParticipantStatus @default(CALLING)
+  joinedAt DateTime?
+  leftAt   DateTime?
+  duration Int?
+  call     Call                  @relation(fields: [callId], references: [id], onDelete: Cascade)
+  user     User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([callId, userId])
+  @@map("call_participants")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  title     String
+  content   String
+  type      NotificationType
+  data      Json?
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+enum UserStatus {
+  ONLINE
+  AWAY
+  BUSY
+  OFFLINE
+}
+
+enum RoomType {
+  INDIVIDUAL
+  GROUP
+}
+
+enum RoomRole {
+  OWNER
+  ADMIN
+  MODERATOR
+  MEMBER
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  VIDEO
+  AUDIO
+  FILE
+  STICKER
+  SYSTEM
+}
+
+enum AttachmentType {
+  IMAGE
+  VIDEO
+  AUDIO
+  FILE
+  STICKER
+}
+
+enum CallType {
+  VOICE
+  VIDEO
+}
+
+enum CallStatus {
+  ONGOING
+  ENDED
+  MISSED
+}
+
+enum CallParticipantStatus {
+  CALLING
+  JOINED
+  LEFT
+  DECLINED
+  MISSED
+}
+
+enum NotificationType {
+  MESSAGE
+  FRIEND_REQUEST
+  CALL_INCOMING
+  CALL_MISSED
+  ROOM_INVITATION
+  SYSTEM
+}
+
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
