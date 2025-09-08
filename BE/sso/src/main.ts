@@ -14,7 +14,7 @@ async function bootstrap() {
   app.useLogger(appLogger);
 
   const config = app.get(ConfigService);
-  const port = config.get<number>('PORT', 4000);
+  const port = config.get<number>('PORT', 4001);
 
   console.log('[BOOT] NODE_ENV =', config.get('NODE_ENV'));
   console.log('[BOOT] Effective PORT =', port);

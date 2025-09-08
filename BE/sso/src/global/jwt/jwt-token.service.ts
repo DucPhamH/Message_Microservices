@@ -18,7 +18,7 @@ export class JwtTokenService {
       const payload = await this.jwtService.verifyAsync<PayloadToken>(token, {
         secret: this.config.get<string>('AT_SECRET_KEY'),
       });
-      return payload; // { sub, username, iat, exp }
+      return payload;
     } catch (e) {
       if (e instanceof TokenExpiredError) {
         this.logger.warn('Access token expired', JwtTokenService.name);

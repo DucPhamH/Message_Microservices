@@ -152,7 +152,7 @@ export class AuthService {
     return LoginResponseWithTokenSchema.parse(response);
   }
 
-  async logout(refreshToken: string) {
+  async logout(refreshToken: string, userId: string) {
     // Validate refresh token
     const decoded =
       await this.jwtTokenService.validateRefreshToken(refreshToken);
@@ -160,6 +160,18 @@ export class AuthService {
     const result = await this.redisService.del(
       `refresh_token:${decoded.userId}-&${refreshToken}`,
     );
+
+    // Chỉ cho phép logout nếu userId truyền vào trùng với userId trong token
+    if (decoded.userId !== userId) {
+      this.logger.warn('User ID mismatch on logout', AuthService.name, {
+        tokenUserId: decoded.userId,
+        requestUserId: userId,
+      });
+      return logoutResponseSchema.parse({
+        message: AUTH_MESSAGES.LOGOUT_FAIL,
+      });
+    }
+
     if (result === 1) {
       this.logger.log('User logged out successfully', AuthService.name, {
         userId: decoded.userId,

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod';
 import { GlobalModule } from './global/global.module';
 import { LoggingInterceptor } from './global/interceptor/logging.interceptor';
@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { HttpExceptionFilter } from './global/interceptor/all-exceptions.filter';
 import { ConfigModule } from '@nestjs/config';
 import { getEnvFilePathList, validateEnv } from './config/env.config';
+import { JwtAuthGuard } from './global/guard/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -39,6 +40,10 @@ import { getEnvFilePathList, validateEnv } from './config/env.config';
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
     },
   ],
 })

@@ -7,8 +7,10 @@ import {
   RefreshTokenBodyDto,
   RefreshTokenResponseDto,
 } from './dto/refresh-token.dto';
+import { Public } from 'src/global/decorator/public.decorator';
+import { User } from 'src/global/decorator/user.decorator';
 
-@Controller('auth')
+@Controller()
 export class AuthController {
   constructor(private authService: AuthService) {}
 
@@ -19,16 +21,21 @@ export class AuthController {
     return await this.authService.register(regiterBody);
   }
 
+  @Public()
   @Post('login')
   async login(@Body() loginBody: LoginBodyDto): Promise<LoginResponseDto> {
     return await this.authService.login(loginBody);
   }
 
   @Post('logout')
-  async logout(@Body() logoutBody: LogoutBodyDto): Promise<LogoutResponseDto> {
-    return await this.authService.logout(logoutBody.refreshToken);
+  async logout(
+    @Body() logoutBody: LogoutBodyDto,
+    @User() user: User,
+  ): Promise<LogoutResponseDto> {
+    return await this.authService.logout(logoutBody.refreshToken, user.userId);
   }
 
+  @Public()
   @Post('refresh-token')
   async refreshToken(
     @Body() refreshTokenBody: RefreshTokenBodyDto,

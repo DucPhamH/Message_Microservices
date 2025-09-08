@@ -15,5 +15,5 @@ export const AUTH_MESSAGES = {
     'Access token đã hết hạn, vui lòng lấy access token mới',
   LOGOUT_SUCCESS: 'Đăng xuất thành công',
   LOGOUT_FAIL: 'Đăng xuất thất bại',
-  NO_TOKEN: 'Không tìm thấy token',
+  ACCESS_TOKEN_REQUIRED: 'Access token là bắt buộc',
 };

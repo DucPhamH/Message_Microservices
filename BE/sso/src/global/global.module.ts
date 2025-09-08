@@ -8,11 +8,17 @@ import { LoggerModule } from './logger/logger.module';
 import { TransformInterceptor } from './interceptor/transform.interceptor';
 import { RedisModule } from './redis/redis.module';
 import { JwtModule } from './jwt/jwt.module';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
 
 @Global() // Đánh dấu global để không cần import mỗi module
 @Module({
   imports: [PrismaModule, LoggerModule, RedisModule, JwtModule],
-  providers: [LoggingInterceptor, PasswordService, TransformInterceptor],
+  providers: [
+    LoggingInterceptor,
+    PasswordService,
+    TransformInterceptor,
+    JwtAuthGuard,
+  ],
   exports: [
     LoggingInterceptor,
     PrismaModule,
@@ -21,6 +27,7 @@ import { JwtModule } from './jwt/jwt.module';
     TransformInterceptor,
     RedisModule,
     JwtModule,
+    JwtAuthGuard,
   ],
 })
 export class GlobalModule {}
