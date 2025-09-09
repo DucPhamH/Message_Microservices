@@ -32,6 +32,7 @@ model User {
   sentMessages           Message[]
   notifications          Notification[]
   roomMemberships        RoomMember[]
+  isVerified             Boolean           @default(false)
   createdRooms           Room[]            @relation("RoomCreator")
 
   @@index([phoneNumber])
