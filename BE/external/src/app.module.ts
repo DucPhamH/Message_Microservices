@@ -9,6 +9,7 @@ import { HttpExceptionFilter } from './global/interceptor/all-exceptions.filter'
 import { ConfigModule } from '@nestjs/config';
 import { getEnvFilePathList, validateEnv } from './config/env.config';
 import { TransformInterceptor } from './global/interceptor/transform.interceptor';
+import { OtpModule } from './otp/otp.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { TransformInterceptor } from './global/interceptor/transform.interceptor
       ignoreEnvVars: false,
       validate: validateEnv, // dùng Zod validate đã tách riêng
     }),
+    OtpModule,
   ],
   controllers: [AppController],
   providers: [

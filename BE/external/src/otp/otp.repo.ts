@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from './prisma/prisma.service';
-import { OtpType } from './model/otp.schema';
+import { PrismaService } from 'src/global/prisma/prisma.service';
+import { OtpDto } from './model/otp.schema';
 
 @Injectable()
-export class GlobalRepository {
+export class OtpRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  createOtp(body: Pick<OtpType, 'email' | 'code' | 'type' | 'expiresAt'>) {
+  createOtp(body: Pick<OtpDto, 'email' | 'code' | 'type' | 'expiresAt'>) {
     return this.prismaService.otp.upsert({
       where: {
         email_code_type: {
@@ -23,7 +23,7 @@ export class GlobalRepository {
     });
   }
 
-  findOtpByEmailAndCode(body: Pick<OtpType, 'email' | 'code' | 'type'>) {
+  findOtpByEmailAndCode(body: Pick<OtpDto, 'email' | 'code' | 'type'>) {
     return this.prismaService.otp.findFirst({
       where: body,
     });

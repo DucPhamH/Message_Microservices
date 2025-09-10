@@ -1,34 +1,38 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { CheckOtpBodyType, CreateOtpBodyType } from './dto/otp.dto';
+import {
+  CheckOtpBodyDto,
+  CreateOtpBodyDto,
+  SendOtpEmailDto,
+} from './dto/otp.dto';
 import ms from 'ms';
 import { addMilliseconds } from 'date-fns';
-import { GlobalRepository } from './global.repo';
 import { ConfigService } from '@nestjs/config';
 import { Env } from 'src/config/env.config';
-import { OTP_MESSAGES } from './constants/message.constant';
 import { Resend } from 'resend';
 import OTPEmail from 'src/view/otp';
+import { OtpRepository } from './otp.repo';
+import { OTP_MESSAGES } from 'src/global/constants/message.constant';
 
 @Injectable()
-export class GlobalService {
+export class OtpService {
   private resend: Resend;
   constructor(
-    private readonly globalRepo: GlobalRepository,
+    private readonly otpRepo: OtpRepository,
     private readonly cfg: ConfigService<Env, true>,
   ) {
     this.resend = new Resend(this.cfg.get('RESEND_API_KEY'));
   }
 
-  async createOtp(body: CreateOtpBodyType) {
+  async createOtp(body: CreateOtpBodyDto) {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
-    const { error } = await this.sendOTP({
+    const { error } = await this.sendOTPEmail({
       email: body.email,
       code,
     });
     if (error) {
       throw new ConflictException(error.message || OTP_MESSAGES.FAILED_TO_SEND);
     }
-    return this.globalRepo.createOtp({
+    return this.otpRepo.createOtp({
       email: body.email,
       code: code,
       type: body.type,
@@ -39,8 +43,8 @@ export class GlobalService {
     });
   }
 
-  async checkOtp(body: CheckOtpBodyType) {
-    const otp = await this.globalRepo.findOtpByEmailAndCode(body);
+  async checkOtp(body: CheckOtpBodyDto) {
+    const otp = await this.otpRepo.findOtpByEmailAndCode(body);
     if (!otp) {
       throw new ConflictException(OTP_MESSAGES.INVALID);
     }
@@ -50,7 +54,7 @@ export class GlobalService {
     return otp;
   }
 
-  async sendOTP(payload: { email: string; code: string }) {
+  async sendOTPEmail(payload: SendOtpEmailDto) {
     const subject = 'Mã OTP';
     return this.resend.emails.send({
       from: 'Message_Microservice <onboarding@resend.dev>',

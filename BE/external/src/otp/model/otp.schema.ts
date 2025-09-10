@@ -1,9 +1,10 @@
 import { OtpCodeType } from '@prisma/client';
+import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
 export const OtpSchema = z.object({
   id: z.number(),
-  email: z.string(),
+  email: z.string().email(),
   code: z.string().length(6),
   type: z.enum([
     OtpCodeType.VERIFY_EMAIL,
@@ -15,4 +16,4 @@ export const OtpSchema = z.object({
 });
 
 // Export type để dùng lại trong service/controller
-export type OtpType = z.infer<typeof OtpSchema>;
+export class OtpDto extends createZodDto(OtpSchema) {}

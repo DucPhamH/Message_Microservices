@@ -6,22 +6,11 @@ import { PrismaModule } from './prisma/prisma.module';
 import { LoggerModule } from './logger/logger.module';
 import { TransformInterceptor } from './interceptor/transform.interceptor';
 import { RedisModule } from './redis/redis.module';
-import { GlobalService } from './global.service';
-import { GlobalController } from './global.controller';
-import { GlobalRepository } from './global.repo';
-// import { EmailService } from './email.service';
 
 @Global() // Đánh dấu global để không cần import mỗi module
 @Module({
   imports: [PrismaModule, LoggerModule, RedisModule],
-  providers: [
-    LoggingInterceptor,
-    TransformInterceptor,
-    GlobalService,
-    GlobalRepository,
-    // EmailService,
-  ],
-  controllers: [GlobalController],
+  providers: [LoggingInterceptor, TransformInterceptor],
   exports: [
     LoggingInterceptor,
     PrismaModule,
