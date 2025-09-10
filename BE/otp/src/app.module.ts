@@ -8,6 +8,7 @@ import { LoggingInterceptor } from './global/interceptor/logging.interceptor';
 import { HttpExceptionFilter } from './global/interceptor/all-exceptions.filter';
 import { ConfigModule } from '@nestjs/config';
 import { getEnvFilePathList, validateEnv } from './config/env.config';
+import { TransformInterceptor } from './global/interceptor/transform.interceptor';
 
 @Module({
   imports: [
@@ -23,16 +24,20 @@ import { getEnvFilePathList, validateEnv } from './config/env.config';
   providers: [
     AppService,
     {
-      provide: APP_PIPE,
-      useClass: ZodValidationPipe,
-    },
-    {
       provide: APP_INTERCEPTOR, // Cách này thay cho app.useGlobalInterceptors
       useClass: LoggingInterceptor,
     },
     {
       provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
       useClass: ZodSerializerInterceptor,
+    },
+    {
+      provide: APP_PIPE,
+      useClass: ZodValidationPipe,
     },
     {
       provide: APP_FILTER,

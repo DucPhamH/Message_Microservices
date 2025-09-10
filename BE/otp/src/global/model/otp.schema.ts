@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export const OtpSchema = z.object({
   id: z.number(),
-  email: z.string().email(),
+  email: z.string(),
   code: z.string().length(6),
   type: z.enum([
     OtpCodeType.VERIFY_EMAIL,
