@@ -86,6 +86,7 @@ const EnvSchema = z.object({
   RT_SECRET_KEY: z.string().min(1, 'RT_SECRET_KEY is required'),
   RT_EXPIRES_IN: z.string().min(1, 'RT_EXPIRES_IN is required'),
   OTP_EXPIRES_IN: z.string().min(1, 'OTP_EXPIRES_IN is required'),
+  RESEND_API_KEY: z.string().min(1, 'RESEND_API_KEY is required'),
 });
 export type Env = z.infer<typeof EnvSchema>;
 

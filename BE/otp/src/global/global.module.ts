@@ -9,6 +9,7 @@ import { RedisModule } from './redis/redis.module';
 import { GlobalService } from './global.service';
 import { GlobalController } from './global.controller';
 import { GlobalRepository } from './global.repo';
+// import { EmailService } from './email.service';
 
 @Global() // Đánh dấu global để không cần import mỗi module
 @Module({
@@ -18,6 +19,7 @@ import { GlobalRepository } from './global.repo';
     TransformInterceptor,
     GlobalService,
     GlobalRepository,
+    // EmailService,
   ],
   controllers: [GlobalController],
   exports: [
