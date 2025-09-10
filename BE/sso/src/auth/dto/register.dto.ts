@@ -13,7 +13,7 @@ export const RegisterBodySchema = z.object({
 // loại bỏ password trong response
 export const RegisterResponseSchema = UsersSchema.omit({
   password: true,
-}).strip();
+});
 
 export class RegisterBodyDto extends createZodDto(RegisterBodySchema) {}
 export class RegisterResponseDto extends createZodDto(RegisterResponseSchema) {}
