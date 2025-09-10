@@ -10,6 +10,7 @@ import { HttpExceptionFilter } from './global/interceptor/all-exceptions.filter'
 import { ConfigModule } from '@nestjs/config';
 import { getEnvFilePathList, validateEnv } from './config/env.config';
 import { JwtAuthGuard } from './global/guard/jwt-auth.guard';
+import { TransformInterceptor } from './global/interceptor/transform.interceptor';
 
 @Module({
   imports: [
@@ -26,8 +27,8 @@ import { JwtAuthGuard } from './global/guard/jwt-auth.guard';
   providers: [
     AppService,
     {
-      provide: APP_PIPE,
-      useClass: ZodValidationPipe,
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
     },
     {
       provide: APP_INTERCEPTOR, // Cách này thay cho app.useGlobalInterceptors
@@ -35,15 +36,19 @@ import { JwtAuthGuard } from './global/guard/jwt-auth.guard';
     },
     {
       provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
       useClass: ZodSerializerInterceptor,
+    },
+    {
+      provide: APP_PIPE,
+      useClass: ZodValidationPipe,
     },
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
     },
   ],
 })

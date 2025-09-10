@@ -12,7 +12,7 @@ export const CheckOtpBodySchema = OtpSchema.pick({
   type: true,
 });
 
-export const OtpResSchema = OtpSchema;
+export const OtpResponseSchema = OtpSchema;
 
 export const SendOtpEmailSchema = OtpSchema.pick({
   email: true,
@@ -21,5 +21,5 @@ export const SendOtpEmailSchema = OtpSchema.pick({
 
 export class CreateOtpBodyDto extends createZodDto(CreateOtpBodySchema) {}
 export class CheckOtpBodyDto extends createZodDto(CheckOtpBodySchema) {}
-export class OtpResDto extends createZodDto(OtpResSchema) {}
+export class OtpResponseDto extends createZodDto(OtpResponseSchema) {}
 export class SendOtpEmailDto extends createZodDto(SendOtpEmailSchema) {}
