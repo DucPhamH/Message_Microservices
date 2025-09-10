@@ -215,6 +215,17 @@ model Notification {
   @@map("notifications")
 }
 
+model Otp {
+  id        Int         @id @default(autoincrement())
+  email     String      @db.VarChar(500)
+  code      String      @db.VarChar(50)
+  expiresAt DateTime
+  createdAt DateTime    @default(now())
+  type      OtpCodeType
+
+  @@unique([email, code, type])
+}
+
 enum UserStatus {
   ONLINE
   AWAY
@@ -284,4 +295,10 @@ enum FriendRequestStatus {
   PENDING
   ACCEPTED
   DECLINED
+}
+
+enum OtpCodeType {
+  VERIFY_EMAIL
+  RESET_PASSWORD
+  FORGOT_PASSWORD
 }
