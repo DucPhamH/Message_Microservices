@@ -85,6 +85,19 @@ const EnvSchema = z.object({
   AT_EXPIRES_IN: z.string().min(1, 'AT_EXPIRES_IN is required'),
   RT_SECRET_KEY: z.string().min(1, 'RT_SECRET_KEY is required'),
   RT_EXPIRES_IN: z.string().min(1, 'RT_EXPIRES_IN is required'),
+
+  EXTERNAL_SERVICE_URL: z.string().min(1, 'EXTERNAL_SERVICE is required'),
+  HTTP_TIMEOUT: z.string().min(1, 'HTTP_TIMEOUT is required'),
+  HTTP_MAX_REDIRECTS: z
+    .string()
+    .min(1)
+    .transform((v) => {
+      const n = Number(v);
+      if (Number.isNaN(n))
+        throw new Error('HTTP_MAX_REDIRECTS must be a number');
+      return n;
+    })
+    .default(5),
 });
 export type Env = z.infer<typeof EnvSchema>;
 
