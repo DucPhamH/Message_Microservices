@@ -16,4 +16,5 @@ export const AUTH_MESSAGES = {
   LOGOUT_SUCCESS: 'Đăng xuất thành công',
   LOGOUT_FAIL: 'Đăng xuất thất bại',
   NO_TOKEN: 'Không tìm thấy token',
+  NOT_FOUND_USER: 'Không tìm thấy người dùng',
 };

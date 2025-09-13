@@ -12,6 +12,7 @@ import { getEnvFilePathList, validateEnv } from './config/env.config';
 import { JwtAuthGuard } from './global/guard/jwt-auth.guard';
 import { TransformInterceptor } from './global/interceptor/transform.interceptor';
 import { OtpModule } from './otp/otp.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { OtpModule } from './otp/otp.module';
       validate: validateEnv, // dùng Zod validate đã tách riêng
     }),
     OtpModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [
