@@ -9,12 +9,15 @@ import {
 } from './dto/refresh-token.dto';
 import { Public } from 'src/global/decorator/public.decorator';
 import { User } from 'src/global/decorator/user.decorator';
+import { ZodSerializerDto } from 'nestjs-zod';
 
-@Controller()
+@Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Public()
   @Post('register')
+  @ZodSerializerDto(RegisterResponseDto)
   async register(
     @Body() regiterBody: RegisterBodyDto,
   ): Promise<RegisterResponseDto> {
@@ -23,11 +26,13 @@ export class AuthController {
 
   @Public()
   @Post('login')
+  @ZodSerializerDto(LoginResponseDto)
   async login(@Body() loginBody: LoginBodyDto): Promise<LoginResponseDto> {
     return await this.authService.login(loginBody);
   }
 
   @Post('logout')
+  @ZodSerializerDto(LogoutResponseDto)
   async logout(
     @Body() logoutBody: LogoutBodyDto,
     @User() user: User,
@@ -37,6 +42,7 @@ export class AuthController {
 
   @Public()
   @Post('refresh-token')
+  @ZodSerializerDto(RefreshTokenResponseDto)
   async refreshToken(
     @Body() refreshTokenBody: RefreshTokenBodyDto,
   ): Promise<RefreshTokenResponseDto> {

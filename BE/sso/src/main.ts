@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AppLoggerService } from './global/logger/logger.service';
-import { TransformInterceptor } from './global/interceptor/transform.interceptor';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
@@ -10,7 +9,6 @@ async function bootstrap() {
   });
 
   const appLogger = app.get(AppLoggerService);
-  app.useGlobalInterceptors(new TransformInterceptor());
   app.useLogger(appLogger);
 
   const config = app.get(ConfigService);

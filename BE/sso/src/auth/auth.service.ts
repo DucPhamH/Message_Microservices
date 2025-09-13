@@ -1,17 +1,15 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { PasswordService } from 'src/global/auth/password.service';
-import { RegisterBodyDto, RegisterResponseSchema } from './dto/register.dto';
+import { RegisterBodyDto } from './dto/register.dto';
 import { AUTH_MESSAGES } from 'src/global/constants/message.constant';
 import { AppLoggerService } from 'src/global/logger/logger.service';
 import { AuthRepository } from './auth.repo';
-import { LoginBodyDto, LoginResponseWithTokenSchema } from './dto/login.dto';
+import { LoginBodyDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtTokenService } from 'src/global/jwt/jwt-token.service';
 import { RedisService } from 'src/global/redis/redis.service';
 import { PayloadToken } from 'src/global/jwt/dto/jwt.dto';
-import { logoutResponseSchema } from './dto/logout.dto';
-import { refreshTokenResponseSchema } from './dto/refresh-token.dto';
 
 @Injectable()
 export class AuthService {
@@ -80,7 +78,7 @@ export class AuthService {
       username: data.username,
     });
 
-    return RegisterResponseSchema.parse(user);
+    return user;
   }
 
   async login(data: LoginBodyDto) {
@@ -149,7 +147,7 @@ export class AuthService {
       email: user.email,
       username: user.username,
     });
-    return LoginResponseWithTokenSchema.parse(response);
+    return response;
   }
 
   async logout(refreshToken: string, userId: string) {
@@ -167,25 +165,25 @@ export class AuthService {
         tokenUserId: decoded.userId,
         requestUserId: userId,
       });
-      return logoutResponseSchema.parse({
+      return {
         message: AUTH_MESSAGES.LOGOUT_FAIL,
-      });
+      };
     }
 
     if (result === 1) {
       this.logger.log('User logged out successfully', AuthService.name, {
         userId: decoded.userId,
       });
-      return logoutResponseSchema.parse({
+      return {
         message: AUTH_MESSAGES.LOGOUT_SUCCESS,
-      });
+      };
     } else {
       this.logger.warn('Refresh token not found in Redis', AuthService.name, {
         userId: decoded.userId,
       });
-      return logoutResponseSchema.parse({
+      return {
         message: AUTH_MESSAGES.LOGOUT_FAIL,
-      });
+      };
     }
   }
 
@@ -237,9 +235,9 @@ export class AuthService {
       userId: decoded.userId,
     });
 
-    return refreshTokenResponseSchema.parse({
+    return {
       accessToken,
       refreshToken,
-    });
+    };
   }
 }

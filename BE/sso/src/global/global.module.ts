@@ -9,15 +9,26 @@ import { TransformInterceptor } from './interceptor/transform.interceptor';
 import { RedisModule } from './redis/redis.module';
 import { JwtModule } from './jwt/jwt.module';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
+import { HttpConfigService } from './http/http-config.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Global() // Đánh dấu global để không cần import mỗi module
 @Module({
-  imports: [PrismaModule, LoggerModule, RedisModule, JwtModule],
+  imports: [
+    PrismaModule,
+    LoggerModule,
+    RedisModule,
+    JwtModule,
+    HttpModule.registerAsync({
+      useExisting: HttpConfigService,
+    }),
+  ],
   providers: [
     LoggingInterceptor,
     PasswordService,
     TransformInterceptor,
     JwtAuthGuard,
+    HttpConfigService,
   ],
   exports: [
     LoggingInterceptor,
@@ -28,6 +39,8 @@ import { JwtAuthGuard } from './guard/jwt-auth.guard';
     RedisModule,
     JwtModule,
     JwtAuthGuard,
+    HttpConfigService,
+    HttpModule,
   ],
 })
 export class GlobalModule {}

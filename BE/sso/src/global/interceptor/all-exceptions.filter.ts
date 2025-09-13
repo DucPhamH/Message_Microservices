@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ZodError } from 'zod';
-import { ZodValidationException } from 'nestjs-zod';
+import { ZodSerializationException, ZodValidationException } from 'nestjs-zod';
 import { AppLoggerService } from '../logger/logger.service';
 
 @Catch()
@@ -18,7 +18,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
-    console.log('Exception type:', exception.constructor.name); // Debug log
+    console.log('Exception type:', exception); // Debug log
 
     // 1. Xử lý ZodValidationException TRƯỚC
     if (exception instanceof ZodValidationException) {
@@ -32,6 +32,25 @@ export class HttpExceptionFilter implements ExceptionFilter {
       return response.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
         statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
         message: 'Validation failed',
+        error: zodError.issues.map((err) => ({
+          code: err.code,
+          path: err.path,
+          message: err.message,
+        })),
+      });
+    }
+
+    if (exception instanceof ZodSerializationException) {
+      const zodError: ZodError = (exception as any).error;
+      this.logger.error(
+        'ZodSerializationException thrown',
+        undefined,
+        'HttpExceptionFilter',
+        { issues: zodError.issues },
+      );
+      return response.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
+        statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        message: 'Serialization failed',
         error: zodError.issues.map((err) => ({
           code: err.code,
           path: err.path,

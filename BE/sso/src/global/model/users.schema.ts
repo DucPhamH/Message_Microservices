@@ -1,5 +1,6 @@
 // src/user/schemas/user.schema.ts
 import { UserStatus } from '@prisma/client';
+import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
 export const UsersSchema = z.object({
@@ -24,4 +25,4 @@ export const UsersSchema = z.object({
 });
 
 // Export type để dùng lại trong service/controller
-export type UsersType = z.infer<typeof UsersSchema>;
+export class UserDto extends createZodDto(UsersSchema) {}
