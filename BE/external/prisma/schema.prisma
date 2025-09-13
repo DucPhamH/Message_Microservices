@@ -219,11 +219,12 @@ model Otp {
   id        Int         @id @default(autoincrement())
   email     String      @db.VarChar(500)
   code      String      @db.VarChar(50)
+  type      OtpCodeType
   expiresAt DateTime
   createdAt DateTime    @default(now())
-  type      OtpCodeType
 
   @@unique([email, code, type])
+  @@map("otp")
 }
 
 enum UserStatus {

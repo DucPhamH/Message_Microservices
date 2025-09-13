@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
-import { OtpSchema } from '../model/otp.schema';
+import { OtpSchema } from 'src/global/model/otp.schema';
 
 export const CreateOtpBodySchema = OtpSchema.pick({
   email: true,
@@ -12,7 +12,9 @@ export const CheckOtpBodySchema = OtpSchema.pick({
   type: true,
 });
 
-export const OtpResponseSchema = OtpSchema;
+export const OtpResponseSchema = OtpSchema.omit({
+  code: true,
+});
 
 export const SendOtpEmailSchema = OtpSchema.pick({
   email: true,

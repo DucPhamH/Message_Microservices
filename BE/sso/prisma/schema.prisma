@@ -224,6 +224,7 @@ model Otp {
   createdAt DateTime @default(now())
 
   @@unique([email, code, type])
+  @@map("otp")
 }
 
 enum OtpCodeType {
