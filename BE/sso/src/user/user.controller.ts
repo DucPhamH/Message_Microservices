@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from 'src/global/decorator/public.decorator';
 import { ZodSerializerDto } from 'nestjs-zod';
 import { GetUserResponseDto } from './dto/get-user.dto';
+import { User } from 'src/global/decorator/user.decorator';
 
 @Controller('user')
 export class UserController {
@@ -13,9 +14,8 @@ export class UserController {
 
   @Get()
   @ZodSerializerDto(GetUserResponseDto)
-  async findOne(@Request() req): Promise<GetUserResponseDto> {
-    const userId = req.user.userId;
-    return await this.userService.findOne(userId);
+  async findOne(@User() user: User): Promise<GetUserResponseDto> {
+    return await this.userService.findOne(user.userId);
   }
 
   @Public()
