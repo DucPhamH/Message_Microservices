@@ -1,9 +1,14 @@
-import { OtpCodeType } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
+export enum OtpCodeType {
+  VERIFY_EMAIL = 'VERIFY_EMAIL',
+  FORGOT_PASSWORD = 'FORGOT_PASSWORD',
+  RESET_PASSWORD = 'RESET_PASSWORD',
+}
+
 export const OtpSchema = z.object({
-  id: z.number(),
+  id: z.string().uuid(),
   email: z.string().email(),
   code: z.string().length(6),
   type: z.enum([

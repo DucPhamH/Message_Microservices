@@ -7,6 +7,7 @@ export const CreateOtpBodySchema = OtpSchema.pick({
 });
 
 export const CheckOtpBodySchema = OtpSchema.pick({
+  id: true,
   email: true,
   code: true,
   type: true,
@@ -14,6 +15,8 @@ export const CheckOtpBodySchema = OtpSchema.pick({
 
 export const OtpResponseSchema = OtpSchema.omit({
   code: true,
+  expiresAt: true,
+  createdAt: true,
 });
 
 export const SendOtpEmailSchema = OtpSchema.pick({
