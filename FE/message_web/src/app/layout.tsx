@@ -1,5 +1,7 @@
+// app/layout.tsx
 import "./globals.css";
 import { fontSans, fontMono } from "./fonts";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata = {
   title: "Message App",
@@ -12,9 +14,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="vi">
+    <html lang="vi" suppressHydrationWarning>
       <body className={`${fontSans.variable} ${fontMono.variable} antialiased`}>
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

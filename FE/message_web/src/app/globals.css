@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
-@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -47,6 +46,21 @@ body {
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@theme {
+  /* font-sans (UI) -> JetBrains Mono */
+  --font-sans: var(--font-jetbrains), ui-sans-serif, system-ui, sans-serif;
+
+  /* font-mono (code) -> Be Vietnam Pro */
+  --font-mono: var(--font-be-vietnam), ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+}
+
+/* Dùng font-sans mặc định cho toàn bộ UI */
+html,
+body {
+  @apply font-sans antialiased;
 }
 
 @theme inline {
