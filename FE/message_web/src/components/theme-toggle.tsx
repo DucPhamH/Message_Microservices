@@ -2,11 +2,11 @@
 
 import * as React from "react";
 import { Moon, Sun, Monitor } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useHookTheme } from "@/app/hooks/hook-theme";
 
 // Button variant - simple toggle between light/dark
 export function ThemeToggleButton() {
-  const { setTheme, theme } = useTheme();
+  const { setTheme, theme } = useHookTheme();
 
   return (
     <button
@@ -22,7 +22,7 @@ export function ThemeToggleButton() {
 
 // Dropdown variant - allows system/light/dark selection
 export function ThemeToggleDropdown() {
-  const { setTheme, theme } = useTheme();
+  const { setTheme, theme } = useHookTheme();
   const [open, setOpen] = React.useState(false);
 
   const themes = [
@@ -75,8 +75,7 @@ export function ThemeToggleDropdown() {
 
 // Switch variant - toggle with labels
 export function ThemeToggleSwitch() {
-  const { setTheme, theme } = useTheme();
-  const isDark = theme === "dark";
+  const { setTheme, isDark } = useHookTheme();
 
   return (
     <div className="flex items-center space-x-2">
@@ -103,7 +102,7 @@ export function ThemeToggleSwitch() {
 
 // More advanced menu component
 export function ThemeToggleMenu() {
-  const { setTheme, theme, themes } = useTheme();
+  const { setTheme, theme, themes } = useHookTheme();
   const [mounted, setMounted] = React.useState(false);
 
   // useEffect only runs on the client, so now we can safely show the UI
