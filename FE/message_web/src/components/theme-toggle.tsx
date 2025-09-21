@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Moon, Sun, Monitor } from "lucide-react";
-import { useHookTheme } from "@/app/hooks/hook-theme";
+import { useHookTheme } from "@/hooks/hook-theme";
 
 // Button variant - simple toggle between light/dark
 export function ThemeToggleButton() {

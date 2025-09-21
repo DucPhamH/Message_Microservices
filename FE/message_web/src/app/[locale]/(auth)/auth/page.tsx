@@ -29,10 +29,31 @@ import {
   Sparkles,
   CheckCircle2,
   XCircle,
+  Triangle,
 } from "lucide-react";
 import { ThemeToggleSwitch } from "@/components/theme-toggle";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useLocale, useTranslations } from "next-intl";
+import { routing } from "@/i18n/routing";
+import { usePathname, useRouter } from "@/i18n/navigation";
 
 export default function AuthPage() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const locale = useLocale();
+
+  function switchLocale(newLocale: (typeof routing.locales)[number]) {
+    router.replace(pathname, { locale: newLocale });
+  }
+
+  const t = useTranslations("Auth");
+
   const [showPasswordLogin, setShowPasswordLogin] = useState(false);
   const [showPasswordRegister, setShowPasswordRegister] = useState(false);
   const [pwd, setPwd] = useState("");
@@ -88,6 +109,27 @@ export default function AuthPage() {
           </div>
         </div>
         <div className="hidden sm:flex items-center gap-2 text-sm text-slate-600">
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              {locale.toLocaleUpperCase()}
+              <Triangle
+                className="ml-1 inline h-3 w-3 stroke-[3px] rotate-180"
+                fill="currentColor"
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => switchLocale("vi")}>
+                Tiếng Việt
+                <DropdownMenuShortcut>VI</DropdownMenuShortcut>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem onClick={() => switchLocale("en")}>
+                English
+                <DropdownMenuShortcut>EN</DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <div className="group inline-flex items-center gap-1 rounded-full border border-transparent bg-white/60 px-3 py-1 font-medium text-slate-700 shadow-sm backdrop-blur transition hover:border-slate-300 hover:bg-white/80">
             <ThemeToggleSwitch />
           </div>
@@ -159,9 +201,9 @@ export default function AuthPage() {
               <CardContent>
                 <Tabs defaultValue="login" className="w-full">
                   <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="login">Đăng nhập</TabsTrigger>
+                    <TabsTrigger value="login">{t("sign_in")}</TabsTrigger>
                     <TabsTrigger id="register-tab" value="register">
-                      Đăng ký
+                      {t("sign_up")}
                     </TabsTrigger>
                   </TabsList>
 

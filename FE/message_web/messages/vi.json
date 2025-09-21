@@ -1,0 +1,24 @@
+{
+  "NotFound": {
+    "message": "Trang bạn tìm không tồn tại",
+    "go_back": "Quay về trang chủ"
+  },
+  "Auth": {
+    "sign_in": "Đăng nhập",
+    "sign_up": "Đăng ký",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "confirm_password": "Xác nhận mật khẩu",
+    "forgot_password": "Quên mật khẩu?",
+    "no_account": "Chưa có tài khoản? ",
+    "have_account": "Đã có tài khoản? ",
+    "reset_password": "Đặt lại mật khẩu",
+    "send_reset_link": "Gửi liên kết đặt lại",
+    "back_to_login": "Quay lại đăng nhập",
+    "reset_link_sent": "Liên kết đặt lại đã được gửi đến email của bạn.",
+    "invalid_credentials": "Thông tin đăng nhập không hợp lệ.",
+    "passwords_not_match": "Mật khẩu không khớp.",
+    "user_exists": "Người dùng với email này đã tồn tại.",
+    "weak_password": "Mật khẩu quá yếu. Vui lòng chọn mật khẩu mạnh hơn."
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "NotFound": {
+    "message": "Page not found",
+    "go_back": "Go back home"
+  },
+  "Auth": {
+    "sign_in": "Sign In",
+    "sign_up": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "forgot_password": "Forgot Password?",
+    "no_account": "Don't have an account? ",
+    "have_account": "Already have an account? ",
+    "reset_password": "Reset Password",
+    "send_reset_link": "Send Reset Link",
+    "back_to_login": "Back to Login",
+    "reset_link_sent": "A reset link has been sent to your email.",
+    "invalid_credentials": "Invalid credentials.",
+    "passwords_not_match": "Passwords do not match.",
+    "user_exists": "A user with this email already exists.",
+    "weak_password": "Password is too weak. Please choose a stronger password."
+  }
+}
