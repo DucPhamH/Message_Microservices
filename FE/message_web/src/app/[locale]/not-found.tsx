@@ -5,11 +5,18 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Ghost } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
 
 export default function NotFoundPage() {
   const t = useTranslations("NotFound");
   return (
-    <div className="relative flex flex-col items-center justify-center h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-100 overflow-hidden">
+    <div
+      className={cn(
+        "relative flex flex-col items-center justify-center h-screen overflow-hidden",
+        "bg-gradient-to-br from-indigo-50 via-white to-indigo-100",
+        "dark:bg-none"
+      )}
+    >
       {/* Floating Ghost Icon */}
       <motion.div
         initial={{ y: -20 }}
@@ -32,7 +39,7 @@ export default function NotFoundPage() {
 
       {/* Subtitle */}
       <motion.p
-        className="mt-4 text-xl text-gray-600"
+        className="mt-4 text-xl text-gray-600 dark:text-inherit"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}

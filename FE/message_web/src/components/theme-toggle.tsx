@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Moon, Sun, Monitor } from "lucide-react";
 import { useHookTheme } from "@/hooks/hook-theme";
+import { cn } from "@/lib/utils";
 
 // Button variant - simple toggle between light/dark
 export function ThemeToggleButton() {
@@ -82,16 +83,20 @@ export function ThemeToggleSwitch() {
       <Sun className="h-4 w-4" />
       <button
         onClick={() => setTheme(isDark ? "light" : "dark")}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${
-          isDark ? "bg-primary" : "bg-input"
-        }`}
+        className={cn(
+          "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
+          "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+          "bg-primary"
+        )}
         role="switch"
         aria-checked={isDark}
       >
         <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-background shadow-lg transition-transform ${
+          className={cn(
+            `inline-block h-4 w-4 rounded-full bg-background shadow-lg`,
+            `transform transition-transform`,
             isDark ? "translate-x-6" : "translate-x-1"
-          }`}
+          )}
         />
       </button>
       <Moon className="h-4 w-4" />
