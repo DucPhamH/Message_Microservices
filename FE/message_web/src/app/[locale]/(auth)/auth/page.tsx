@@ -40,18 +40,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useLocale, useTranslations } from "next-intl";
-import { routing } from "@/i18n/routing";
-import { usePathname, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 export default function AuthPage() {
-  const router = useRouter();
-  const pathname = usePathname();
   const locale = useLocale();
-
-  function switchLocale(newLocale: (typeof routing.locales)[number]) {
-    router.replace(pathname, { locale: newLocale });
-  }
 
   const t = useTranslations("Auth");
 
@@ -102,7 +95,7 @@ export default function AuthPage() {
       <CursorSpotlight />
 
       {/* Header */}
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
+      <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
         <div className="flex items-center gap-3">
           <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-white/80 dark:bg-black shadow">
             <span className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-slate-900/5" />
@@ -127,15 +120,17 @@ export default function AuthPage() {
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => switchLocale("vi")}>
-                Tiếng Việt
-                <DropdownMenuShortcut>VI</DropdownMenuShortcut>
-              </DropdownMenuItem>
+              <Link href="/auth" locale="vi" replace>
+                <DropdownMenuItem>
+                  Tiếng Việt<DropdownMenuShortcut>VI</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </Link>
 
-              <DropdownMenuItem onClick={() => switchLocale("en")}>
-                English
-                <DropdownMenuShortcut>EN</DropdownMenuShortcut>
-              </DropdownMenuItem>
+              <Link href="/auth" locale="en" replace>
+                <DropdownMenuItem>
+                  English<DropdownMenuShortcut>EN</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -149,7 +144,7 @@ export default function AuthPage() {
             <ThemeToggleSwitch />
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Main */}
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-4 pb-16 pt-2 md:grid-cols-2">
